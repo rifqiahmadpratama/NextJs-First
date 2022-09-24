@@ -3,7 +3,8 @@ import React, { useEffect, Fragment } from "react";
 import Navbar from "../../components/navbar/index";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
-import ImageProfile from "../../assets/images/home_1.png";
+
+import ImageBackground from "../../assets/images/background_login.png";
 
 const Login = () => {
   return (
@@ -19,7 +20,7 @@ const Login = () => {
           <div className="row mt-3 justify-content-center">
             <div className="col-6">
               <Image
-                src={ImageProfile}
+                src={ImageBackground}
                 alt="Picture of the author"
                 width={500}
                 height={500}

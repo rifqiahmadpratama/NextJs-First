@@ -352,14 +352,11 @@ const NavBar = () => {
                           <div className="col-6 d-grid">
                             <Button
                               variant="warning"
-                              // onClick={() => {
-                              //   navigate("../sign-up");
-                              //   toggleOffcanvas();
-                              // }}
+                              onClick={() => router.push("/register")}
                               className=" rounded-pill block  "
                               type="button"
                             >
-                              <p className="my-auto text-light"> Sign Up</p>
+                              <p className="my-auto text-light"> Register</p>
                             </Button>
                           </div>
                         </div>
@@ -395,7 +392,7 @@ const NavBar = () => {
                             </div>
                           </Form>
                         </div>
-                        <div className="col-xl-4 col-lg-4 d-flex">
+                        <div className="col-xl-4 col-lg-4 d-flex mt-2">
                           <div className="col-6 d-grid px-2">
                             <Button
                               variant="warning"
@@ -409,14 +406,11 @@ const NavBar = () => {
                           <div className="col-6 d-grid">
                             <Button
                               variant="warning"
-                              // onClick={() => {
-                              //   navigate("../sign-up");
-                              //   toggleOffcanvas();
-                              // }}
+                              onClick={() => router.push("/register")}
                               className=" rounded-pill block  "
                               type="button"
                             >
-                              <p className="my-auto text-light"> Sign Up</p>
+                              <p className="my-auto text-light"> Register</p>
                             </Button>
                           </div>
                         </div>
