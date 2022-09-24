@@ -27,7 +27,7 @@ yarn-error.log*
 
 package-lock.json
 package.json
-pages/_app.js
+
 
 # local env files
 .env*.local
