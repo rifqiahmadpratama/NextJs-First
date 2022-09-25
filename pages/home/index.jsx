@@ -2,6 +2,7 @@ import Head from "next/head";
 import React, { useEffect, Fragment } from "react";
 import Navbar from "../../components/navbar/index";
 import Footer from "../../components/footer/index";
+import HomeSwiper from "../../components/homeSwiper";
 import Image from "next/image";
 import ImageProfile from "../../assets/images/home_1.png";
 //import { SwiperSlide } from "swiper";
@@ -77,6 +78,7 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <HomeSwiper />
         <Footer />
       </Fragment>
     </div>

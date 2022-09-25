@@ -1,8 +1,10 @@
 import Head from "next/head";
 import React, { useEffect, Fragment } from "react";
+import styles from "../../styles/login.module.css";
 import Navbar from "../../components/navbar/index";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
+import Logo from "../../assets/images/logo/logo-white.svg";
 
 import ImageBackground from "../../assets/images/background_login.png";
 
@@ -19,12 +21,22 @@ const Login = () => {
         <div className="container">
           <div className="row mt-3 justify-content-center">
             <div className="col-6">
-              <Image
-                src={ImageBackground}
-                alt="Picture of the author"
-                width={500}
-                height={500}
-              />
+              <div className={styles.backdroplogin}>
+                <div className="mt-4 me-3">
+                  <Image
+                    className={styles.logo}
+                    src={Logo}
+                    height={30}
+                    alt="Logo"
+                  />
+                </div>
+                <div className="mt-5 py-5">
+                  <h1 className="text-white mx-5">
+                    Temukan developer berbakat & terbaik di berbagai bidang
+                    keahlian
+                  </h1>
+                </div>
+              </div>
             </div>
             <div className="col-6">
               <form

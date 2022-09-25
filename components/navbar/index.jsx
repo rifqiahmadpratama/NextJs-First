@@ -13,9 +13,9 @@ import IconSearch from "../../assets/images/icons/search.svg";
 import PhotoEmpty from "../../assets/images/icons/ico-user.svg";
 
 const NavBar = () => {
-  const user_picture = "null";
+  const user_picture = "";
   const router = useRouter();
-  const isAuth = "";
+  const isAuth = "sadsad";
   const expand = "lg";
   function getWindowSize() {
     const { innerWidth, innerHeight } = typeof window;
@@ -60,9 +60,7 @@ const NavBar = () => {
         <Container fluid="sm">
           <Navbar.Brand className="me-5">
             <div
-              // onClick={() => {
-              //   navigate("../home");
-              // }}
+              onClick={() => router.push("/home")}
               className="col-lg-3 col-md-3 col-sm-3  cursor-pointer"
             >
               <Image
@@ -90,12 +88,7 @@ const NavBar = () => {
                 className="col-12 d-flex justify-content-between"
               >
                 <div
-                  // onClick={() => {
-                  //   if (windowSize.innerWidth <= 992) {
-                  //     toggleOffcanvas();
-                  //     navigate("../home");
-                  //   } else navigate("../home");
-                  // }}
+                  onClick={() => router.push("/home")}
                   className="col-lg-3 col-md-3 col-sm-3 link-redirect"
                 >
                   <Image
