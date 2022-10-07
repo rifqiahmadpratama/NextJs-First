@@ -8,20 +8,30 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Image from "next/image";
-import ImageNavbar from "../../assets/images/peworld_jingga.png";
+import axios from "axios";
+import style from "../../styles/Navbar.module.css";
+import ImageNavbar from "../../assets/images/logo/logo-purple.svg";
 import IconSearch from "../../assets/images/icons/search.svg";
-import PhotoEmpty from "../../assets/images/icons/ico-user.svg";
+import PhotoEmpty from "../../assets/images/1_home.png";
+import Cookies from "js-cookie";
 
 const NavBar = () => {
   const user_picture = "";
+  const [isAuth, setIsAuth] = useState("");
   const router = useRouter();
-  const isAuth = "sadsad";
+
   const expand = "lg";
   function getWindowSize() {
     const { innerWidth, innerHeight } = typeof window;
     return { innerWidth, innerHeight };
   }
-
+  const handleLogout = () => {
+    setIsAuth("");
+    Cookies.remove("token");
+    Cookies.remove("refreshToken");
+    Cookies.remove("role");
+    Cookies.remove("id");
+  };
   const pictureThumbnails = (
     <span>
       <Image
@@ -29,8 +39,8 @@ const NavBar = () => {
         referrerPolicy="no-referrer"
         src={
           user_picture === null || user_picture === undefined
-            ? PhotoEmpty
-            : user_picture
+            ? { PhotoEmpty }
+            : { user_picture }
         }
         alt=""
       />
@@ -40,15 +50,37 @@ const NavBar = () => {
     setWindowSize(getWindowSize());
   }
   const [windowSize, setWindowSize] = useState(getWindowSize());
-
+  const [show, setShow] = useState(false);
+  const toggleOffcanvas = () => {
+    setShow(!show);
+  };
+  const getDataProfile = async () => {
+    if (isAuth) {
+      await axios
+        .get(process.env.REACT_APP_API_BACKEND + "users/profile", {
+          headers: {
+            Authorization: `Bearer ${isAuth}`,
+            "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
+          },
+        })
+        .then((response) => {
+          setProfileUser(response.data.data);
+          //   console.log(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
   useEffect(() => {
-    // dispatchProfileUser();
+    getDataProfile();
+    setIsAuth(Cookies.get("token"));
     window.addEventListener("resize", handleWindowResize);
     return () => {
       window.removeEventListener("resize", handleWindowResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuth]);
   return (
     <Fragment>
       <Navbar
@@ -63,18 +95,16 @@ const NavBar = () => {
               onClick={() => router.push("/home")}
               className="col-lg-3 col-md-3 col-sm-3  cursor-pointer"
             >
-              <Image
-                referrerPolicy="no-referrer"
-                className="my-auto logo-toggle-navbar"
-                src={ImageNavbar}
-                alt=""
-              />
+              <div className={style.logonavbar}>
+                <Image
+                  className="my-auto logo-toggle-navbar"
+                  src={ImageNavbar}
+                  alt=""
+                />
+              </div>
             </div>
           </Navbar.Brand>
-          <Navbar.Toggle
-          // onClick={toggleOffcanvas}
-          // aria-controls={`offcanvasNavbar-expand-${expand}`}
-          />
+          <Navbar.Toggle />
 
           <Navbar.Offcanvas
             // show={show}
@@ -91,12 +121,13 @@ const NavBar = () => {
                   onClick={() => router.push("/home")}
                   className="col-lg-3 col-md-3 col-sm-3 link-redirect"
                 >
-                  <Image
-                    referrerPolicy="no-referrer"
-                    className="my-auto logo-toggle-navbar"
-                    src={ImageNavbar}
-                    alt=""
-                  />
+                  <div className={style.logonavbar}>
+                    <Image
+                      className="my-auto logo-toggle-navbar"
+                      src={ImageNavbar}
+                      alt=""
+                    />
+                  </div>
                 </div>
                 <div
                   className="btn-close-offcanvas "
@@ -125,16 +156,13 @@ const NavBar = () => {
                                 //    onChange={handleSearch}
                               />
                               <Button
-                                // onClick={() => {
-                                //   navigate("../recipes?" + searchParams);
-                                //   toggleOffcanvas();
-                                // }}
+                                onClick={() => router.push("/job")}
                                 className="bg-transparent border-0 rounded-pill btn-search"
                                 type="submit"
                               >
                                 <Image
                                   className=""
-                                  src={{ IconSearch }.default}
+                                  src={IconSearch}
                                   alt="search"
                                 />
                               </Button>
@@ -152,8 +180,8 @@ const NavBar = () => {
                                 src={
                                   user_picture === null ||
                                   user_picture === undefined
-                                    ? PhotoEmpty
-                                    : user_picture
+                                    ? { PhotoEmpty }
+                                    : { user_picture }
                                 }
                                 alt=""
                               />
@@ -163,10 +191,7 @@ const NavBar = () => {
                                 <div className="col-12 d-grid mt-4">
                                   <Button
                                     variant="outline-warning"
-                                    // onClick={() => {
-                                    //   navigate("../profile");
-                                    //   toggleOffcanvas();
-                                    // }}
+                                    onClick={() => router.push("/profile")}
                                     className=" rounded-pill block  "
                                     type="button"
                                   >
@@ -177,14 +202,11 @@ const NavBar = () => {
                                 <div className="col-12 d-grid mt-4">
                                   <Button
                                     variant="outline-warning"
-                                    // onClick={() => {
-                                    //   navigate("../profile/my-recipes");
-                                    //   toggleOffcanvas();
-                                    // }}
+                                    onClick={() => router.push("/job")}
                                     className=" rounded-pill block  "
                                     type="button"
                                   >
-                                    <p className="my-auto">My Recipes</p>
+                                    <p className="my-auto">Job</p>
                                   </Button>
                                 </div>
                               </Nav.Link>
@@ -194,15 +216,15 @@ const NavBar = () => {
                           <div className="col-12 d-grid mt-4">
                             <Button
                               variant="warning"
-                              // onClick={() => {
-                              //   navigate("../home");
-                              //   toggleOffcanvas();
-                              //   handleSignOut();
-                              // }}
+                              onClick={() => {
+                                handleLogout();
+                                router.push("/login");
+                                toggleOffcanvas();
+                              }}
                               className=" rounded-pill block  "
                               type="button"
                             >
-                              <p className="my-auto">Sign Out</p>
+                              <p className="my-auto">Logout</p>
                             </Button>
                           </div>
                         </div>
@@ -223,15 +245,13 @@ const NavBar = () => {
                                 // onChange={handleSearch}
                               />
                               <Button
-                                // onClick={() => {
-                                //   navigate("../recipes?" + searchParams);
-                                // }}
+                                onClick={() => router.push("/job")}
                                 className="bg-transparent border-0 rounded-pill btn-search"
                                 type="submit"
                               >
                                 <Image
                                   className=""
-                                  src={{ IconSearch }.default}
+                                  src={IconSearch}
                                   alt="search"
                                 />
                               </Button>
@@ -246,46 +266,25 @@ const NavBar = () => {
                               align="end"
                               id={`offcanvasNavbarDropdown-expand-${expand}`}
                             >
-                              {/* <NavDropdown.Header className="d-grid ">
-                              <p className="mb-0 fw-bold">
-                                {
-                                  // user_email
-                                }{" "}
-                              </p>
-                              <p className="mb-0">
-                                <small>
-                                  {" "}
-                                  UID :{" "}
-                                  {
-                                    // user_id
-                                  }
-                                </small>
-                              </p>
-                            </NavDropdown.Header>
-                            <NavDropdown.Divider /> */}
                               <NavDropdown.Item
-                              // onClick={() => {
-                              //   navigate("../profile");
-                              // }}
+                                onClick={() => router.push("/profile")}
                               >
                                 My Profile
                               </NavDropdown.Item>
                               <NavDropdown.Divider />
                               <NavDropdown.Item
-                              // onClick={() => {
-                              //   navigate("../profile/my-recipes");
-                              // }}
+                                onClick={() => router.push("/job")}
                               >
-                                My Recipes
+                                Job
                               </NavDropdown.Item>
                               <NavDropdown.Divider />
                               <NavDropdown.Item
-                              // onClick={() => {
-                              //   navigate("../home");
-                              //   handleSignOut();
-                              // }}
+                                onClick={() => {
+                                  router.push("/login");
+                                  handleLogout();
+                                }}
                               >
-                                Sign Out
+                                Logout
                               </NavDropdown.Item>
                             </NavDropdown>
                           </div>
@@ -314,17 +313,13 @@ const NavBar = () => {
                                 //  onChange={handleSearch}
                               />
                               <Button
-                                // onClick={() => {
-                                //   navigate("../recipes?" + searchParams);
-                                //   // setSearchParams()
-                                //   toggleOffcanvas();
-                                // }}
+                                onClick={() => router.push("/job")}
                                 className="bg-transparent border-0 rounded-pill btn-search"
                                 type="submit"
                               >
                                 <Image
                                   className=""
-                                  src={{ IconSearch }.default}
+                                  src={IconSearch}
                                   alt="search"
                                 />
                               </Button>
@@ -335,9 +330,9 @@ const NavBar = () => {
                           <div className="col-6 d-grid px-2">
                             <Button
                               variant="warning"
-                              onClick={() => router.push("/login")}
                               className=" rounded-pill block "
                               type="button"
+                              onClick={() => router.push("/login")}
                             >
                               <p className="my-auto text-light">Login</p>
                             </Button>
@@ -370,15 +365,13 @@ const NavBar = () => {
                                 //    onChange={handleSearch}
                               />
                               <Button
-                                // onClick={() => {
-                                //   navigate("../recipes?" + searchParams);
-                                // }}
+                                onClick={() => router.push("/job")}
                                 className="bg-transparent border-0 rounded-pill btn-search"
                                 type="submit"
                               >
                                 <Image
                                   className="my-0"
-                                  src={{ IconSearch }.default}
+                                  src={IconSearch}
                                   alt="search"
                                 />
                               </Button>

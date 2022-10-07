@@ -1,12 +1,58 @@
 import Head from "next/head";
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import Navbar from "../../components/navbar/index";
 import Footer from "../../components/footer/index";
 import Image from "next/image";
+import axios from "axios";
 import UploadImage from "../../assets/images/upload_image.png";
-
+import { useRouter } from "next/router";
 import ImageProfile from "../../assets/images/profile.png";
-const Profile = () => {
+
+const EditProfile = () => {
+  const router = useRouter();
+  const [dataUser, setData] = useState();
+
+  const handleChange = (e) => {
+    setDataUser({
+      ...dataUser,
+      [e.target.name]: e.target.value,
+    });
+    // console.log(dataUser);
+    // console.log(newPicture);
+  };
+
+  const handleUpdate = async (e) => {
+    await e.preventDefault();
+    const formData = new FormData();
+    formData.append(
+      "name",
+      dataUser.name === undefined ? user_name : dataUser.name
+    );
+
+    dispatch(putProfileUser(formData))
+      .unwrap()
+      .then((item) => {
+        dispatchProfileUser();
+        document.getElementById("modal-edit-profile-close").click();
+      });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get("http://localhost:3200/users/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setData(res.data.data);
+          console.log("Data tes", res.data.data);
+        });
+    }
+  }, []);
+
   return (
     <div>
       <style global jsx>{``}</style>
@@ -45,10 +91,8 @@ const Profile = () => {
                 <div className="card-body">
                   <h3>Data Diri</h3>
                   <hr />
-                  <form
-                    //   onSubmit={handleCreate}
-                    className="w-100 form-sign-up"
-                  >
+
+                  <form onSubmit={handleUpdate} className="w-100 form-sign-up">
                     <div className="mb-2">
                       <label htmlFor="nama" className="form-label">
                         Nama Lengkap
@@ -59,7 +103,8 @@ const Profile = () => {
                         className="form-input form-control"
                         id="nama"
                         placeholder="Masukan nama lengkap"
-                        // onChange={handleChange}
+                        // defaultValue={dataUser.name}
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -73,7 +118,7 @@ const Profile = () => {
                         className="form-input form-control"
                         id="job"
                         placeholder="Masukan job desk"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -87,7 +132,7 @@ const Profile = () => {
                         className="form-input form-control"
                         id="domosili"
                         placeholder="Masukan domosili"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -101,7 +146,7 @@ const Profile = () => {
                         className="form-input form-control"
                         id="kerja"
                         placeholder="Masukan Tempat Kerja"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -115,9 +160,15 @@ const Profile = () => {
                         className="form-input form-control"
                         id="kerja"
                         placeholder="Tuliskan Deskripsi Singkat"
-                        // onChange={handleChange}
+                        onChange={handleChange}
                       />
                     </div>
+                    <button
+                      type="submit"
+                      className="btn btn-warning text-light"
+                    >
+                      Save changes
+                    </button>
                   </form>
                 </div>
               </div>
@@ -328,4 +379,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default EditProfile;
